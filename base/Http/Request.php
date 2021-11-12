@@ -34,8 +34,8 @@ class Request {
 
     public function input(string $key = '')
     {
-        $postdata = file_get_contents("php://input");
-        $request = json_decode($postdata, true);
+        $post_data = file_get_contents("php://input");
+        $request = json_decode($post_data, true);
 
         if ($key != '') {
             return isset($request[$key]) ? $this->clean($request[$key]) : null;

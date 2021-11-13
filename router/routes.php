@@ -1,7 +1,9 @@
 <?php
 
-    $router->get('/test', 'auth@test');
+    $router->get('/login', 'auth@login');
+    $router->get('/register', 'auth@register');
 
     $router->get("/", function (){
-        echo 'index test ';
+        echo 'Welcome!';
     });
+?>

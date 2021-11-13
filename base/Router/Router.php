@@ -4,18 +4,40 @@ namespace Router;
 
 class Router
 {
+    /**
+     * @var array
+     */
     private $router = [];
 
+    /**
+     * @var array
+     */
     private $matchRouter = [];
 
+    /**
+     * @var string
+     */
     private $url;
 
+    /**
+     * @var string
+     */
     private $method;
 
+    /**
+     * @var array
+     */
     private $params = [];
 
+    /**
+     * @var mixed
+     */
     private $response;
 
+    /**
+     * @param string $url
+     * @param string $method
+     */
     public function __construct(string $url, string $method) {
         $this->url = rtrim($url, '/');
         $this->method = $method;
@@ -24,26 +46,50 @@ class Router
         $this->response = $GLOBALS['response'];
     }
 
+    /**
+     * @param $pattern
+     * @param $callback
+     */
     public function get($pattern, $callback) {
         $this->addRoute("GET", $pattern, $callback);
     }
 
+    /**
+     * @param $pattern
+     * @param $callback
+     */
     public function post($pattern, $callback) {
         $this->addRoute('POST', $pattern, $callback);
     }
 
+    /**
+     * @param $pattern
+     * @param $callback
+     */
     public function put($pattern, $callback) {
         $this->addRoute('PUT', $pattern, $callback);
     }
 
+    /**
+     * @param $pattern
+     * @param $callback
+     */
     public function delete($pattern, $callback) {
         $this->addRoute('DELETE', $pattern, $callback);
     }
 
+    /**
+     * @param $method
+     * @param $pattern
+     * @param $callback
+     */
     public function addRoute($method, $pattern, $callback) {
         array_push($this->router, new Route($method, $pattern, $callback));
     }
 
+    /**
+     *
+     */
     private function getMatchRoutersByRequestMethod() {
         foreach ($this->router as $value) {
             if (strtoupper($this->method) == $value->getMethod())
@@ -51,6 +97,9 @@ class Router
         }
     }
 
+    /**
+     * @param $pattern
+     */
     private function getMatchRoutersByPattern($pattern) {
         $this->matchRouter = [];
         foreach ($pattern as $value) {
@@ -59,6 +108,11 @@ class Router
         }
     }
 
+    /**
+     * @param $uri
+     * @param $pattern
+     * @return bool
+     */
     public function dispatch($uri, $pattern) {
         $parsUrl = explode('?', $uri);
         $url = $parsUrl[0];
@@ -87,19 +141,33 @@ class Router
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getRouter() {
         return $this->router;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     */
     private function setParams($key, $value) {
         $this->params[$key] = $value;
     }
 
+    /**
+     * @param $matches
+     * @return string
+     */
     private function convertPatternToRegex($matches) {
         $key = str_replace(':', '', $matches[0]);
         return '(?P<' . $key . '>[a-zA-Z0-9_\-\.\!\~\*\\\'\(\)\:\@\&\=\$\+,%]+)';
     }
 
+    /**
+     *
+     */
     public function run() {
         if (!is_array($this->router) || empty($this->router))
             throw new Exception('NON-Object Route Set');
@@ -118,6 +186,11 @@ class Router
         }
     }
 
+    /**
+     * @param $controller
+     * @param $params
+     * @return false|mixed|void
+     */
     private function runController($controller, $params) {
         $parts = explode('@', $controller);
         $file = CONTROLLERS . ucfirst($parts[0]) . '.php';
@@ -149,6 +222,9 @@ class Router
         }
     }
 
+    /**
+     *
+     */
     private function sendNotFound() {
         $this->response->sendStatus(404);
         $this->response->setContent(['error' => 'Sorry This Route Not Found !', 'status_code' => 404]);

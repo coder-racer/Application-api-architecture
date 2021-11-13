@@ -4,17 +4,33 @@ namespace Core;
 
 class Controller
 {
+    /**
+     * @var mixed
+     */
     public $request;
 
+    /**
+     * @var
+     */
     public $model;
 
+    /**
+     * @var mixed
+     */
     public $response;
 
+    /**
+     *
+     */
     public function __construct() {
         $this->request = $GLOBALS['request'];
         $this->response = $GLOBALS['response'];
     }
 
+    /**
+     * @param $model
+     * @return mixed
+     */
     public function loadModel($model) {
         $file = MODELS . ucfirst($model) . '.php';
 
@@ -33,6 +49,10 @@ class Controller
         }
     }
 
+    /**
+     * @param int $status
+     * @param $msg
+     */
     public function send($status = 200, $msg) {
         $this->response->setHeader(sprintf('HTTP/1.1 ' . $status . ' %s' , $this->response->getStatusCodeText($status)));
         $this->response->setContent($msg);

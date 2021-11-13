@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @param $class
+ * @return bool|void
+ */
 function autoload($class) {
     /*
      * Грязный хак, который нужно переписать.

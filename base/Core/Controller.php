@@ -50,10 +50,10 @@ class Controller
     }
 
     /**
-     * @param int $status
      * @param $msg
+     * @param int $status
      */
-    public function send($status = 200, $msg) {
+    public function send($msg, $status = 200) {
         $this->response->setHeader(sprintf('HTTP/1.1 ' . $status . ' %s' , $this->response->getStatusCodeText($status)));
         $this->response->setContent($msg);
     }
